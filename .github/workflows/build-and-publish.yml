@@ -1,0 +1,50 @@
+name: Docker Builds For Voxel51 Discord Bot
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+      id-token: 'write'
+    env:
+      GCP_LOCATION: ''
+      GCP_PROJECT: ''
+      GCP_DOCKER_REPOSITORY: ''
+      GCP_HELM_REGISTRY: ''
+      GCP_SERVICE_ACCOUNT: ''
+      VERSION: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.ORG_GOOGLE_WORKLOAD_IDP }}
+      - name: Set Up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Docker login
+        run: |
+          gcloud auth print-access-token | docker login \
+            -u oauth2accesstoken \
+            --password-stdin "https://${{ env.GCP_LOCATION }}-docker.pkg.dev"
+      - name: Helm login
+        run: |
+          gcloud auth print-access-token | \
+            helm registry login -u oauth2accesstoken \
+            --password-stdin "https://${{ env.GCP_LOCATION }}-docker.pkg.dev"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          file: ./external/VoxelBot/dockerfile
+          context: ./external/VoxelBot
+          tags: ${{ env.GCP_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT }}/${{ env.GCP_DOCKER_REPOSITORY }}/voxel51-discordbot:${{ env.VERSION }}
