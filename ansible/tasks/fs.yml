@@ -1,0 +1,38 @@
+---
+
+- name: Create directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0770'
+    owner: "{{ ansible_user_id }}"
+    group: fiftyone
+    recurse: true
+  loop:
+    - /deploy
+    - "{{ docker_dir }}"
+
+- name: Read from gcp
+  ansible.builtin.shell: |
+    gcloud secrets versions access latest \
+      --secret="{{ gcp_sm_key }}" \
+      --project="{{ project }}"
+  register: _env
+
+- name: Save to .env file
+  ansible.builtin.copy:
+    content: "{{ _env.stdout }}"
+    dest: "{{ docker_dir }}/.env"
+    owner: "{{ ansible_user_id }}"
+    group: fiftyone
+    mode: '0660'
+  no_log: true
+
+- name: Move compose file over
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../docker-compose.yaml"
+    dest: "{{ docker_dir }}/docker-compose.yaml"
+    group: fiftyone
+    mode: '0660'
+  no_log: true

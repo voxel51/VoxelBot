@@ -1,0 +1,19 @@
+---
+- name: Add groups to the system
+  become: true
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - docker
+    - fiftyone
+
+- name: Add user to group
+  become: true
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: "{{ item }}"
+    append: true
+  loop:
+    - docker
+    - fiftyone

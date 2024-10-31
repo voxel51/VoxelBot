@@ -1,0 +1,13 @@
+---
+
+services:
+  discordbot:
+    image: "${DOCKER_REGISTRY:-}voxel51-discordbot:${TAG:-latest}"
+    build:
+      context: .
+      dockerfile: dockerfile
+    volumes:
+      - discordbot:/app/persist/:rw
+
+volumes:
+  discordbot: {}

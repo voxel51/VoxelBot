@@ -1,0 +1,14 @@
+---
+- name: Deploy Voxel51 Discord Bot
+  hosts: "{{ lookup('env', 'GCP_COMPUTE_SERVER_NAME') }}"
+  gather_facts: true
+
+  tasks:
+    - name: Sync User Permissions
+      include_tasks: tasks/users.yml
+
+    - name: Ensure paths and dot envs
+      include_tasks: tasks/fs.yml
+
+    - name: Deploy stack
+      include_tasks: tasks/docker.yml
