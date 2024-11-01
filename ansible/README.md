@@ -27,6 +27,7 @@ A list of environment variables:
 
 * `DOCKER_REGISTRY` - The registry to pull images from
 * `GCP_COMPUTE_SERVER_NAME` - The ansbile host or group to deploy to
+* `GCP_LOCATION` - The GCP location of the registry
 * `GCP_SM_KEY` - The GCP secret with .env file contents
 * `TAG` - The image tag to deploy
 
@@ -35,6 +36,7 @@ An example:
 ```shell
 export DOCKER_REGISTRY="us.gcr.io/.../..."
 export GCP_COMPUTE_SERVER_NAME=some-server-name
+export GCP_LOCATION=some-gcp-location
 export GCP_SM_KEY="some-key-name"
 export TAG="abc123"
 ansible-playbook main.yml
