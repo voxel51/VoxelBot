@@ -20,7 +20,7 @@ Host variables are documented and defaulted in [this](group_vars/all.yaml) file.
 ## Running
 
 You can run locally via the `ansible-playbook` command.
-You can set your hosts via the command line via the `ANSIBLE_HOST_OR_GROUP`
+You can set your hosts via the command line via the `GCP_COMPUTE_SERVER_NAME`
 environment variable.
 
 A list of environment variables:
