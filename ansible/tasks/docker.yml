@@ -1,4 +1,10 @@
 ---
+- name: Docker login
+  shell: |
+    gcloud auth configure-docker \
+      "{{ lookup('env', 'GCP_LOCATION') }}-docker.pkg.dev" \
+      --quiet
+
 - name: Pull docker images
   community.docker.docker_compose_v2_pull:
     project_src: "{{ docker_dir }}"

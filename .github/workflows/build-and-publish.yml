@@ -63,6 +63,7 @@ jobs:
           GCP_SM_KEY: "${{ secrets.GCP_SM_KEY }}"
           TAG: ${{ github.sha }}
           GCP_COMPUTE_SERVER_NAME: "${{ secrets.GCP_COMPUTE_SERVER_NAME }}"
+          GCP_LOCATION: ${{ secrets.GCP_LOCATION }}
         run: |
           pushd ansible
           sudo pipx inject ansible-core -r requirements.txt
