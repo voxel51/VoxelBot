@@ -1,0 +1,8 @@
+---
+ansible_ssh_args: --tunnel-through-iap --zone={{ zone }} --project={{ project }} --no-user-output-enabled --quiet
+ansible_scp_extra_args: --tunnel-through-iap --zone={{ zone }} --quiet
+docker_dir: /deploy/voxel51-discordbot
+compose_async_timeout: 30
+gcp_sm_key: "{{ lookup('env', 'GCP_SM_KEY') }}"
+docker_registry: "{{ lookup('env', 'DOCKER_REGISTRY') }}"
+tag: "{{ lookup('env', 'TAG') }}"

@@ -1,0 +1,8 @@
+plugin: google.cloud.gcp_compute
+projects: []
+zones: []
+filters:
+  - status = RUNNING
+auth_kind: application
+hostnames:
+  - name

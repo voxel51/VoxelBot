@@ -1,0 +1,33 @@
+---
+- name: Docker login
+  shell: |
+    gcloud auth configure-docker \
+      "{{ lookup('env', 'GCP_LOCATION') }}-docker.pkg.dev" \
+      --quiet
+
+- name: Pull docker images
+  community.docker.docker_compose_v2_pull:
+    project_src: "{{ docker_dir }}"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry }}"
+    TAG: "{{ tag }}"
+
+- name: Create and start services
+  community.docker.docker_compose_v2:
+    project_src: "{{ docker_dir }}"
+    build: "never"
+  environment:
+    DOCKER_REGISTRY: "{{ docker_registry }}"
+    TAG: "{{ tag }}"
+  register: compose_out
+
+# Assert that states == running here
+- name: Verify all services are running
+  ansible.builtin.assert:
+    that:
+      - item.State == 'running'
+    msg: "{{ item.Name }} failed to start properly"
+    quiet: true
+  with_items: "{{ compose_out.containers }}"
+  loop_control:
+    label: "{{ item.Name }}"
