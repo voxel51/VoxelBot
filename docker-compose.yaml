@@ -8,7 +8,7 @@ services:
       dockerfile: dockerfile
     env_file:
       - .env
-    restart_policy: unless-stopped
+    restart: unless-stopped
     volumes:
       - discordbot:/app/persist/:rw
 
