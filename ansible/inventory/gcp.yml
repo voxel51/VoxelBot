@@ -1,8 +1,6 @@
 plugin: google.cloud.gcp_compute
-projects:
-  - voxel51-discordbot
-zones:
-  - us-central1-a
+projects: []
+zones: []
 filters:
   - status = RUNNING
 auth_kind: application

@@ -64,8 +64,11 @@ jobs:
           TAG: ${{ github.sha }}
           GCP_COMPUTE_SERVER_NAME: "${{ secrets.GCP_COMPUTE_SERVER_NAME }}"
           GCP_LOCATION: ${{ secrets.GCP_LOCATION }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         run: |
           pushd ansible
+          yq -i ".projects |= [\"$GCP_PROJECT\"]" ./inventory/gcp.yml
+          yq -i ".zones |= [\"$GCP_LOCATION\"]" ./inventory/gcp.yml
           sudo pipx inject ansible-core -r requirements.txt
           ansible-playbook site.yml
           popd
