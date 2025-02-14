@@ -15,8 +15,10 @@ VOXEL51_REPOS = [r.name for r in GITHUB.get_repos(type="public")]
 @ALL.interactions(is_global=True, wait_for_acknowledgement=True)
 async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
     """Provides specific metric(s) for the voxel51/fiftyone repository."""
-    if repo not in (VOXEL51_REPOS):
+    if repo is not None and not in (VOXEL51_REPOS):
         abort("Must be Voxel51 repo.")
+    elif repo is None:
+        repo = "voxel51/fiftyone"  # default
     
     GITHUB.get_repo(repo)
     issues = repo.search_issues(f'{query} in:title,body')
