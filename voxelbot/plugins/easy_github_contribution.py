@@ -17,7 +17,6 @@ ACCEPT_BUTTON = Button("Accept", emoji=ACCEPT_EMOJI, custom_id="egc.accept", sty
 DENY_BUTTON = Button("Deny", emoji=DENY_EMOJI, custom_id="egc.deny", style=ButtonStyle.red)
 COMPONENTS = Row(ACCEPT_BUTTON, DENY_BUTTON)
 
-VOXEL51_REPOS = [r.name for r in GITHUB.get_repos(type="public")]
 
 @ALL.events  # type: ignore
 async def message_create(client: Client, message: Message):
@@ -132,46 +131,3 @@ async def egc_deny(client: Client, event: InteractionEvent):
     await client.message_delete(event.message.referenced_message)
     await client.interaction_component_acknowledge(event)
     await client.interaction_response_message_delete(event)
-
-
-@ALL.interactions(is_global=True, wait_for_acknowledgement=True)
-async def search_issues(client: Client, query: ("str", "Topic to search")):  # type: ignore
-    """Allow users to search for relevant GitHub issues and return the top-5 results."""
-    if not query:
-        return await client.message_create(message.channel, "Please provide a search query.")
-
-    try:
-        repo = GITHUB.get_repo("voxel51/fiftyone")
-        issues = repo.search_issues(f'{query} in:title,body')
-        if issues.totalCount == 0:
-            return await client.message_create(message.channel, "No relevant issues found.")
-
-        issue_links = "\n".join(f"{issue.title}: {issue.html_url}" for issue in issues[:5])
-        await client.message_create(message.channel, f"Top relevant issues:\n{issue_links}")
-
-
-@ALL.interactions(is_global=True, wait_for_acknowledgement=True)
-async def ref_issue(query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
-    """Provides specific metric(s) for the voxel51/fiftyone repository."""
-    if repo not in (VOXEL51_REPOS):
-        abort("Must be Voxel51 repo.")
-    GITHUB.get_repo(repo)
-    issues = repo.search_issues(f'{query} in:title,body')
-    
-    if issues.totalCount == 0:
-            return await client.message_create(message.channel, "No relevant issues found.")
-    
-    issue_links = "\n".join(f"{issue.title}: {issue.html_url}" for issue in issues[:5])
-    await client.message_create(message.channel, f"Top relevant issues:\n{issue_links}")
-    
-    except GithubException as e:
-        logging.error(f"GitHub API error: {e}")
-        await client.message_create(message.channel, "An error occurred while searching for issues. Please try again later.")
-
-
-@repo_metrics.autocomplete("repo")
-async def repo_autocomplete(value):
-    if not value:
-        return VOXEL51_REPOS
-    value_lower = value.lower()
-    return [repo for repo in VOXEL51_REPOS if repo.startswith(value_lower)]
