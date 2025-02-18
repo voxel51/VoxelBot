@@ -14,7 +14,7 @@ VOXEL51_REPOS = [r.full_name for r in ORG.get_repos(type="public")]
 
 
 @ALL.interactions(is_global=True, wait_for_acknowledgement=True)
-async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
+async ref_issue(client: Client, event: InteractionEvent, query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
     """Returns list of top-five related issues from Voxel51 repository based on user query."""
     if repo is not None and repo not in VOXEL51_REPOS:
         abort("Must be Voxel51 repo.")
