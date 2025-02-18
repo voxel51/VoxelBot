@@ -1,6 +1,6 @@
 import logging
 
-from github import Auth, Github
+from github import Auth, Github, GithubException
 from hata import Client, ClientWrapper
 from hata.ext.slash import abort
 
@@ -15,7 +15,7 @@ VOXEL51_REPOS = [r.name for r in GITHUB.get_repos(type="public")]
 @ALL.interactions(is_global=True, wait_for_acknowledgement=True)
 async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
     """Provides specific metric(s) for the voxel51/fiftyone repository."""
-    if repo is not None and repo not in (VOXEL51_REPOS):
+    if repo is not None and repo not in VOXEL51_REPOS:
         abort("Must be Voxel51 repo.")
     elif repo is None:
         repo = "voxel51/fiftyone"  # default
@@ -34,7 +34,7 @@ async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("st
         await client.message_create(event.channel, "An error occurred while searching for issues. Please try again later.")
 
 
-@repo_metrics.autocomplete("repo")
+@ref_issue.autocomplete("repo")
 async def repo_autocomplete(value):
     if not value:
         return VOXEL51_REPOS
