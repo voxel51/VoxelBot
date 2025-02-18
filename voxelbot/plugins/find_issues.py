@@ -26,7 +26,7 @@ async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("st
         issues = repo.search_issues(f'{query} in:title,body')
         
         if issues.totalCount == 0:
-            return await client.message_create(message.channel, "No relevant issues found.")
+            return await client.message_create(event.channel, "No relevant issues found.")
         
         issue_links = "\n".join(f"{issue.title}: {issue.html_url}" for issue in issues[:5])
         await client.message_create(event.channel, f"Top relevant issues:\n{issue_links}")
