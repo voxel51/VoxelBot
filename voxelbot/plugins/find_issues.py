@@ -10,7 +10,7 @@ ALL = ClientWrapper()
 
 GITHUB = Github(auth=Auth.Token(GITHUB_TOKEN))
 ORG = GITHUB.get_organization("voxel51")
-VOXEL51_REPOS = [r.name for r in ORG.get_repos(type="public")]
+VOXEL51_REPOS = [r.full_name for r in ORG.get_repos(type="public")]
 
 
 @ALL.interactions(is_global=True, wait_for_acknowledgement=True)
