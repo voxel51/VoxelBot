@@ -22,8 +22,7 @@ async ref_issue(client: Client, event: InteractionEvent, query: ("str", "Topic t
         repo = "voxel51/fiftyone"  # default
     
     try:
-        repo = GITHUB.get_repo(repo)
-        issues = GITHUB.search_issues(f"{query} repo:{repo.full_name} in:title,body is:issue")
+        issues = GITHUB.search_issues(f"{query} repo:{repo} in:title,body is:issue")
         
         if issues.totalCount == 0:
             return await client.message_create(event.channel, "No relevant issues found.")
