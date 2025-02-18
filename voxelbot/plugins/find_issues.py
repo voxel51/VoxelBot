@@ -23,7 +23,7 @@ async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("st
     
     try:
         repo = GITHUB.get_repo(repo)
-        issues = GITHUB.search_issues(f"{query} repo:{repo.full_name} in:title,body")
+        issues = GITHUB.search_issues(f"{query} repo:{repo.full_name} in:title,body is:issue")
         
         if issues.totalCount == 0:
             return await client.message_create(event.channel, "No relevant issues found.")
