@@ -21,14 +21,15 @@ async def ref_issue(client, event, query: ("str", "Topic to search"), repo: ("st
     elif repo is None:
         repo = "voxel51/fiftyone"  # default
     
-    GITHUB.get_repo(repo)
-    issues = repo.search_issues(f'{query} in:title,body')
-    
-    if issues.totalCount == 0:
+    try:
+        GITHUB.get_repo(repo)
+        issues = repo.search_issues(f'{query} in:title,body')
+        
+        if issues.totalCount == 0:
             return await client.message_create(message.channel, "No relevant issues found.")
-    
-    issue_links = "\n".join(f"{issue.title}: {issue.html_url}" for issue in issues[:5])
-    await client.message_create(event.channel, f"Top relevant issues:\n{issue_links}")
+        
+        issue_links = "\n".join(f"{issue.title}: {issue.html_url}" for issue in issues[:5])
+        await client.message_create(event.channel, f"Top relevant issues:\n{issue_links}")
     
     except GithubException as e:
         logging.error(f"GitHub API error: {e}")
