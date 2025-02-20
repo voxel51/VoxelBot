@@ -6,7 +6,6 @@ dependencies = [
     "hata[all]",
     "pygithub",
     "aiosqlite",
-    "inotify-simple",
     "pygal",
     "cairosvg",
     "cryptography",
