@@ -24,8 +24,7 @@ async def ref_issue(
     repo: ("str", "Repo to search."),  # type: ignore # noqa: F722
 ):
     """
-    Returns a list of top-five related issues from a specified Voxel51 repository based on the
-    user's query.
+    Returns top-five related issues from a Voxel51 repository based on the user's query.
 
     Args:
         client (Client): The client instance to use for sending messages.
