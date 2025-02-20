@@ -62,13 +62,14 @@ jobs:
           DOCKER_REGISTRY: "${{ secrets.GCP_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_DOCKER_REPOSITORY }}/"
           GCP_SM_KEY: "${{ secrets.GCP_SM_KEY }}"
           TAG: ${{ github.sha }}
-          GCP_COMPUTE_SERVER_NAME: "${{ secrets.GCP_COMPUTE_SERVER_NAME }}"
-          GCP_LOCATION: ${{ secrets.GCP_LOCATION }}
+          GCP_COMPUTE_SERVER_NAME: ${{ secrets.GCP_COMPUTE_SERVER_NAME }}
+          GCP_COMPUTE_SERVER_ZONE: ${{ secrets.GCP_COMPUTE_SERVER_ZONE }} # Zone
+          GCP_LOCATION: ${{ secrets.GCP_LOCATION }} # Region
           GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
         run: |
           pushd ansible
           yq -i ".projects |= [\"$GCP_PROJECT\"]" ./inventory/gcp.yml
-          yq -i ".zones |= [\"$GCP_LOCATION\"]" ./inventory/gcp.yml
+          yq -i ".zones |= [\"$GCP_COMPUTE_SERVER_ZONE\"]" ./inventory/gcp.yml
           sudo pipx inject ansible-core -r requirements.txt
           ansible-playbook site.yml
           popd
