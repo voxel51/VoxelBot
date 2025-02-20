@@ -14,9 +14,26 @@ VOXEL51_REPOS = [r.full_name for r in ORG.get_repos(type="public")]
 
 
 @ALL.interactions(is_global=True, wait_for_acknowledgement=True)
-async ref_issue(client: Client, event: InteractionEvent, query: ("str", "Topic to search"), repo: ("str", "Repo to search.")):  # type: ignore # noqa: F722
-    """Returns list of top-five related issues from Voxel51 repository based on user query."""
-    if repo is not None and repo not in VOXEL51_REPOS:
+async def ref_issue(
+    client: Client,
+    event: InteractionEvent,
+    query: ("str", "Topic to search"),  # type: ignore # noqa: F722
+    repo: ("str", "Repo to search."),  # type: ignore # noqa: F722
+):
+    """
+    Returns a list of top-five related issues from a specified Voxel51 repository based on the 
+    user's query.
+
+    Args:
+        client (Client): The client instance to use for sending messages.
+        event (InteractionEvent): The interaction event that triggered this function.
+        query (str): The topic to search for in the issues.
+        repo (str): The repository to search within.
+
+    Raises:
+        GithubException: If there is an error with the GitHub API request.
+    """
+    if repo not in VOXEL51_REPOS:
         abort("Must be Voxel51 repo.")
     elif repo is None:
         repo = "voxel51/fiftyone"  # default
