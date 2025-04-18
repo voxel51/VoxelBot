@@ -12,7 +12,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.6
-      - uses: actions/setup-python@v5.2.0
-      - name: install asdf & tools
-        uses: asdf-vm/actions/install@9cd779f40fe38688dd19505ccbc4eaaf018b44e7
-      - uses: pre-commit/action@v3.0.1
+      - name: Run pre-commit
+        uses: "voxel51/aloha-github-workflows/.github/actions/pre-commit@main"
